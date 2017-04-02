@@ -18,7 +18,7 @@ import hello.listeners.MessageListener;
 
 @ManagedBean
 public class MessageProducer {
-	private static final Logger logger = Logger.getLogger(MessageListener.class);
+	private static final Logger logger = Logger.getLogger(MessageProducer.class);
 
 	@Autowired
 	KafkaTemplate<String, String> template;

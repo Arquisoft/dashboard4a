@@ -1,18 +1,17 @@
 package hello;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Controller
 public class MainController {
@@ -54,6 +53,17 @@ public class MainController {
 			}
 		
 		return data;
+	}
+    /**
+     * Se ejecuta en localhost:8090/ejemplo.
+     * Esto actualizara la pagina index con los mensajes de la lista
+     * @param model
+     * @return
+     */
+    @RequestMapping("/ejemplo")
+	public String ejemplotest(Model model) {
+		model.addAttribute("data", hello.listeners.MessageListener.mensajes);
+		return "index";
 	}
 
 }
