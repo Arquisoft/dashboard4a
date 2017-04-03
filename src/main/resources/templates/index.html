@@ -1,25 +1,66 @@
-<html>
-<head>
-<title>Dashboard</title>
 
-</head>
-<body>
-<h1>Dashboard</h1>
-<h2>Receiving messages:</h2>
 
-<div id="messages">
-<div th:each="item: ${data}">
-     	<p th:text="${item}" />
-</div>
-</div>
+<!DOCTYPE html>
 
-<script type="text/javascript">
-//<![CDATA[
-var source = new EventSource("/updates");
-source.onmessage = function(event) {
-document.getElementById("messages").innerHTML += (event.data + "</br>");
-};
-//]]>
-</script>
-</body>
+<html lang="en">
+    <head>
+        <script>
+            var connect = function () {
+                var source = new EventSource('/register');
+
+                // Handle correct opening of connection
+                source.addEventListener('open', function (e) {
+                    console.log('Connected.');
+                });
+                
+                // Update the state when ever a message is sent
+                source.addEventListener('message', function (e) {
+                    var state = JSON.parse(e.data);
+                    console.log("New state: " + state.text);
+                    var element = document.getElementById("state");
+                    element.innerHTML = state.text;
+                }, false);
+
+                // Reconnect if the connection fails
+                source.addEventListener('error', function (e) {
+                    console.log('Disconnected.');
+                    if (e.readyState == EventSource.CLOSED) {
+                        connected = false;
+                        connect();
+                    }
+                }, false);
+           
+            
+            var source2 = new EventSource('/register2');
+
+            // Handle correct opening of connection
+            source2.addEventListener('open', function (e) {
+                console.log('Connected.');
+            });
+            
+            // Update the state when ever a message is sent
+            source2.addEventListener('message', function (e) {
+                var state2 = JSON.parse(e.data);
+                console.log("New state: " + state2.text);
+                var element = document.getElementById("state2");
+                element.innerHTML = state2.text;
+            }, false);
+
+            // Reconnect if the connection fails
+            source2.addEventListener('error', function (e) {
+                console.log('Disconnected.');
+                if (e.readyState == EventSource.CLOSED) {
+                    connected = false;
+                    connect();
+                }
+            }, false);
+        };
+        </script>
+    </head>
+    <body onload="connect();">
+        <!-- Load the initial state from the application model. -->
+        Voto positivo: <span id="state"><label th:text="${state.text}"></label></span>
+        <br></br>
+        Voto negativo: <span id="state2"><label th:text="${state2.text}"></label></span>
+    </body>
 </html>

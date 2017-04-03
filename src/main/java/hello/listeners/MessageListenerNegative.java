@@ -19,25 +19,25 @@ import javax.annotation.ManagedBean;
  * Created by herminio on 28/12/16.
  */
 @ManagedBean
-public class MessageListener {
+public class MessageListenerNegative {
 
-    private static final Logger logger = Logger.getLogger(MessageListener.class);
+    private static final Logger logger = Logger.getLogger(MessageListenerNegative.class);
     //se guardan los mensajes recibidos en una lista
     public static List<String> mensajes = new ArrayList<String>();
-    public static State state = new State("state 0");
+    public static State state2 = new State("state 0");
     /** Counter for state changes. */
     private int counter = 1;
     
-    @KafkaListener(topics = "exampleTopic")
+    @KafkaListener(topics = "negativeVote")
     public void listen(String data) {
-    	synchronized (MainController.sseEmitters) {
-    		state = new State("state " + counter++);
-            MainController.sseEmitters.forEach((SseEmitter emitter) -> {
+    	synchronized (MainController.sseEmitters2) {
+    		state2 = new State("state " + counter++);
+            MainController.sseEmitters2.forEach((SseEmitter emitter) -> {
                 try {
-                    emitter.send(state, MediaType.APPLICATION_JSON);
+                    emitter.send(state2, MediaType.APPLICATION_JSON);
                 } catch (IOException e) {
                     emitter.complete();
-                    MainController.sseEmitters.remove(emitter);
+                    MainController.sseEmitters2.remove(emitter);
                 }
             });
         }
