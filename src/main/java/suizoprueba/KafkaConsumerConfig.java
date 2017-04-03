@@ -25,12 +25,12 @@ public class KafkaConsumerConfig {
 		factory.getContainerProperties().setPollTimeout(3000);
 		return factory;
 	}
- 
+
 	@Bean
 	public ConsumerFactory<String, String> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfigs());
 	}
- 
+
 	@Bean
 	public Map<String, Object> consumerConfigs() {
 		Map<String, Object> propsMap = new HashMap<>();
@@ -44,7 +44,7 @@ public class KafkaConsumerConfig {
 		propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		return propsMap;
 	}
- 
+
 	@Bean
 	public Listener listener() {
 		return new Listener();

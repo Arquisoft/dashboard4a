@@ -2,7 +2,6 @@ package hello.listeners;
 
 import hello.MainController;
 
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,31 +20,29 @@ import javax.annotation.ManagedBean;
 @ManagedBean
 public class MessageListener {
 
-    private static final Logger logger = Logger.getLogger(MessageListener.class);
-    //se guardan los mensajes recibidos en una lista
-    public static List<String> mensajes = new ArrayList<String>();
-    public static State state = new State("0");
-    /** Counter for state changes. */
-    private int counter = 1;
-    
-    @KafkaListener(topics = "exampleTopic")
-    public void listen(String data) {
-    	synchronized (MainController.sseEmitters) {
-    		state = new State(String.valueOf(counter++));
-            MainController.sseEmitters.forEach((SseEmitter emitter) -> {
-                try {
-                    emitter.send(state, MediaType.APPLICATION_JSON);
-                } catch (IOException e) {
-                    emitter.complete();
-                    MainController.sseEmitters.remove(emitter);
-                }
-            });
-        }
-    	//se añade el mensaje recibido a la lista
-    	mensajes.add(data);
-        logger.info("New message received: \"" + data + "\"");
-    }
+	private static final Logger logger = Logger.getLogger(MessageListener.class);
+	// se guardan los mensajes recibidos en una lista
+	public static List<String> mensajes = new ArrayList<String>();
+	public static State state = new State("0");
+	/** Counter for state changes. */
+	private int counter = 1;
 
-
+	@KafkaListener(topics = "exampleTopic")
+	public void listen(String data) {
+		synchronized (MainController.sseEmitters) {
+			state = new State(String.valueOf(counter++));
+			MainController.sseEmitters.forEach((SseEmitter emitter) -> {
+				try {
+					emitter.send(state, MediaType.APPLICATION_JSON);
+				} catch (IOException e) {
+					emitter.complete();
+					MainController.sseEmitters.remove(emitter);
+				}
+			});
+		}
+		// se añade el mensaje recibido a la lista
+		mensajes.add(data);
+		logger.info("New message received: \"" + data + "\"");
+	}
 
 }

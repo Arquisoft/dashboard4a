@@ -14,8 +14,6 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import hello.listeners.MessageListener;
 
-
-
 @ManagedBean
 public class MessageProducer {
 	private static final Logger logger = Logger.getLogger(MessageProducer.class);
@@ -31,13 +29,14 @@ public class MessageProducer {
 		System.out.println(message);
 
 		ListenableFuture<SendResult<String, String>> future = template.send("exampleTopic", message);
-		
+
 		// Para saber cuando tiene exito enviandolo y cuando no
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
 			public void onSuccess(SendResult<String, String> result) {
 				logger.info("exito enviando el mensaje " + message);
 			}
+
 			@Override
 			public void onFailure(Throwable ex) {
 				logger.error("error enviando el mensaje " + message);

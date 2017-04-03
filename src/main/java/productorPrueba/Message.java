@@ -2,16 +2,17 @@ package productorPrueba;
 
 public class Message {
 	// Mensajes a enviar
-    private String message;
+	private String message;
 
-    public Message() {}
+	public Message() {
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 }

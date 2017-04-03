@@ -17,30 +17,30 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SpringKafkaExampleApplicationTests {
- 
+
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
 	@Autowired
 	private Listener listener;
- 
+
 	@Test
 	public void contextLoads() throws InterruptedException {
- 
+
 		ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send("topic1", "ABC");
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
 			public void onSuccess(SendResult<String, String> result) {
 				System.out.println("success");
 			}
- 
+
 			@Override
 			public void onFailure(Throwable ex) {
 				System.out.println("failed");
 			}
 		});
 		System.out.println(Thread.currentThread().getId());
-		assertEquals(this.listener.countDownLatch1.await(60, TimeUnit.SECONDS),true);
- 
+		assertEquals(this.listener.countDownLatch1.await(60, TimeUnit.SECONDS), true);
+
 	}
- 
+
 }
