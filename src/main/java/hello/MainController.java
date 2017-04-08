@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import hello.listeners.MessageListener;
@@ -28,21 +29,21 @@ public class MainController {
 	@Autowired
 	private KafkaProducer kafkaProducer = new KafkaProducer();
 
+	@RequestMapping("/")
+	public String login(Model model) {
+		return "index";
+	}
+	
 	@RequestMapping("/votacion")
 	public String votaciones() {
-		return "index3";
+		return "ejemploVotacion";
 	}
 
-	@RequestMapping("/a")
-	public String landing(Model model) {
-		return "index";
-	}
-
-	@RequestMapping("/")
-	public String sseExamplePage(Map<String, Object> model) {
+	@RequestMapping(value= "/login", method = RequestMethod.POST )
+	public String sseExamplePage(@RequestParam String username, @RequestParam String password ,Map<String, Object> model) {
 		model.put("state", MessageListener.state);
 		model.put("state2", MessageListenerNegative.state2);
-		return "index";
+		return "dashboard";
 	}
 
 	@RequestMapping(path = "/register", method = RequestMethod.GET)
@@ -117,13 +118,13 @@ public class MainController {
 	@RequestMapping("/votoPositivo")
 	public String loadData(Model model) {
 		kafkaProducer.send("exampleTopic", "test");
-		return "index3";
+		return "ejemploVotacion";
 	}
 
 	@RequestMapping("/votoNegativo")
 	public String loadDataNegative(Model model) {
 		kafkaProducer.send("negativeVote", "negativetest");
-		return "index3";
+		return "ejemploVotacion";
 	}
 
 }
