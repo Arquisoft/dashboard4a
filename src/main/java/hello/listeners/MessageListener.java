@@ -34,6 +34,7 @@ public class MessageListener {
 			MainController.sseEmitters.forEach((SseEmitter emitter) -> {
 				try {
 					emitter.send(state, MediaType.APPLICATION_JSON);
+					updatePositiveChart();
 				} catch (IOException e) {
 					emitter.complete();
 					MainController.sseEmitters.remove(emitter);
@@ -43,6 +44,10 @@ public class MessageListener {
 		// se añade el mensaje recibido a la lista
 		mensajes.add(data);
 		logger.info("New message received: \"" + data + "\"");
+	}
+
+	private void updatePositiveChart() {
+		
 	}
 
 }

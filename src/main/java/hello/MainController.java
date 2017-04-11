@@ -41,9 +41,17 @@ public class MainController {
 
 	@RequestMapping(value= "/login", method = RequestMethod.POST )
 	public String sseExamplePage(@RequestParam String username, @RequestParam String password ,Map<String, Object> model) {
-		model.put("state", MessageListener.state);
-		model.put("state2", MessageListenerNegative.state2);
-		return "dashboard";
+		String pagina="index";
+		if(username.equals("concejal") && password.equals("concejal")){
+			model.put("state", MessageListener.state);
+			model.put("state2", MessageListenerNegative.state2);
+			pagina = "dashboardConcejal";
+		}else if(username.equals("personal") && password.equals("personal")){
+			model.put("state", MessageListener.state);
+			model.put("state2", MessageListenerNegative.state2);
+			pagina = "dashboardPersonal";
+		}
+		return pagina;
 	}
 
 	@RequestMapping(path = "/register", method = RequestMethod.GET)
