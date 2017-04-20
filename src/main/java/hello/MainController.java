@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import hello.listeners.MessageListener;
-import hello.listeners.MessageListenerNegative;
+//import hello.listeners.MessageListenerNegative;
 import hello.productorPrueba.KafkaProducer;
 
 @Controller
@@ -25,7 +26,7 @@ public class MainController {
 
 	private static final Logger logger = Logger.getLogger(MainController.class);
 	public static List<SseEmitter> sseEmitters = Collections.synchronizedList(new ArrayList<>());
-	public static List<SseEmitter> sseEmitters2 = Collections.synchronizedList(new ArrayList<>());
+	//public static List<SseEmitter> sseEmitters2 = Collections.synchronizedList(new ArrayList<>());
 	@Autowired
 	private KafkaProducer kafkaProducer = new KafkaProducer();
 
@@ -44,11 +45,11 @@ public class MainController {
 		String pagina="index";
 		if(username.equals("concejal") && password.equals("concejal")){
 			model.put("state", MessageListener.state);
-			model.put("state2", MessageListenerNegative.state2);
+			//model.put("state2", MessageListener.state);
 			pagina = "dashboardConcejal";
 		}else if(username.equals("personal") && password.equals("personal")){
 			model.put("state", MessageListener.state);
-			model.put("state2", MessageListenerNegative.state2);
+			//model.put("state2", MessageListener.state2);
 			pagina = "dashboardPersonal";
 		}
 		return pagina;
@@ -59,28 +60,25 @@ public class MainController {
 		logger.info("Registering a stream.");
 
 		SseEmitter emitter = new SseEmitter();
-
 		synchronized (sseEmitters) {
 			sseEmitters.add(emitter);
 		}
+		
 		emitter.onCompletion(() -> sseEmitters.remove(emitter));
-
 		return emitter;
 	}
 
-	@RequestMapping(path = "/register2", method = RequestMethod.GET)
-	public SseEmitter register2() throws IOException {
-		logger.info("Registering a stream2.");
-
-		SseEmitter emitter = new SseEmitter();
-
-		synchronized (sseEmitters2) {
-			sseEmitters2.add(emitter);
-		}
-		emitter.onCompletion(() -> sseEmitters2.remove(emitter));
-
-		return emitter;
-	}
+//	@RequestMapping(path = "/register2", method = RequestMethod.GET)
+//	public SseEmitter register2() throws IOException {
+//		logger.info("Registering a stream2.");
+//
+//		SseEmitter emitter = new SseEmitter();
+//		synchronized (sseEmitters2) {
+//			sseEmitters2.add(emitter);
+//		}
+//		emitter.onCompletion(() -> sseEmitters2.remove(emitter));
+//		return emitter;
+//	}
 
 	@RequestMapping("/updates")
 	SseEmitter subscribeUpdates() {

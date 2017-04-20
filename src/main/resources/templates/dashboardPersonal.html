@@ -11,14 +11,18 @@
                 // Handle correct opening of connection
                 source.addEventListener('open', function (e) {
                     console.log('Connected.');
+                    
                 });
                 
                 // Update the state when ever a message is sent
                 source.addEventListener('message', function (e) {
-                    var state = JSON.parse(e.data);
-                    console.log("New state: " + state.text);
-                    var element = document.getElementById("state");
-                    element.innerHTML = state.text;
+                	console.log("Message received");
+                	console.log(e);
+                    state = JSON.parse(e.data);
+                    console.log("New state positive: " + state.textPositivo);
+                    console.log("New state negative: " + state.textNegativo);
+                    document.getElementById("positive").innerHTML = state.textPositivo;
+                    document.getElementById("negative").innerHTML = state.textNegativo;
                 }, false);
 
                 // Reconnect if the connection fails
@@ -29,38 +33,38 @@
                         connect();
                     }
                 }, false);
-           
+           };
             
-            var source2 = new EventSource('/register2');
+            // var source2 = new EventSource('/register2');
 
             // Handle correct opening of connection
-            source2.addEventListener('open', function (e) {
-                console.log('Connected.');
-            });
+            // source2.addEventListener('open', function (e) {
+              //   console.log('Connected.');
+            // });
             
             // Update the state when ever a message is sent
-            source2.addEventListener('message', function (e) {
-                var state2 = JSON.parse(e.data);
-                console.log("New state: " + state2.text);
-                var element = document.getElementById("state2");
-                element.innerHTML = state2.text;
-            }, false);
+           //  source2.addEventListener('message', function (e) {
+                // var state2 = JSON.parse(e.data);
+                // console.log("New state: " + state2.text);
+                // var element = document.getElementById("state2");
+                // element.innerHTML = state2.text;
+             //}, false);
 
             // Reconnect if the connection fails
-            source2.addEventListener('error', function (e) {
-                console.log('Disconnected.');
-                if (e.readyState == EventSource.CLOSED) {
-                    connected = false;
-                    connect();
-                }
-            }, false);
-        };
+           //  source2.addEventListener('error', function (e) {
+                // console.log('Disconnected.');
+                // if (e.readyState == EventSource.CLOSED) {
+                    // connected = false;
+                 //    connect();
+              //   }
+           //  }, false);
+        // };
         </script>
     </head>
     <body onload="connect();">
         <!-- Load the initial state from the application model. -->
-        Nº votos positivo: <span id="state"><label th:text="${state.text}"></label></span>
+        Nº votos positivos: <span id="positive"><label th:text="${state.textPositivo}"></label></span>
         <br></br>
-        Nº votos negativos: <span id="state2"><label th:text="${state2.text}"></label></span>
+        Nº votos negativos: <span id="negative"><label th:text="${state.textNegativo}"></label></span>
     </body>
 </html>
